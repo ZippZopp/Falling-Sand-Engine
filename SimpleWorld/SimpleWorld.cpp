@@ -4,12 +4,12 @@
 
 #include "SimpleWorld.h"
 
-SimpleWorld::SimpleWorld(): renderer(), environment(ProjectConstants::COLS,ProjectConstants::ROWS){
-    SDL_Color black = {0, 0, 0, 255};
-    SDL_Color white = {255, 255, 255, 255};
-    colorMap[0] = black;
-    colorMap[1] = white;
-}
+SimpleWorld::SimpleWorld():  renderer(),
+                             environment(ProjectConstants::COLS, ProjectConstants::ROWS),
+                             colorMap({
+                                              {0, {0, 0, 0, 255}}, // 0 -> nothing
+                                              {1, {246,215,176, 255}} // 1 -> Sand
+                                      })
 
 
 void SimpleWorld::run() {
