@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/untitled1.dir/main.cpp.o CMakeFiles/untitled1.dir/Renderer/Renderer.cpp.o CMakeFiles/untitled1.dir/SimpleWorld/SimpleWorld.cpp.o CMakeFiles/untitled1.dir/2dWorld/TwoDEnvironment.cpp.o -o untitled1  -L/usr/lib/x86_64-linux-gnu  -lSDL2 
