@@ -29,7 +29,7 @@ public:
 
     void wait(int milliSeconds) const;
 
-    void createElementWithId(TwoDEnvironment *environment, int x, int y, int id) const;
+    void createElementWithId(TwoDEnvironment *environment, int id) const;
 };
 
 #endif // UNTITLED1_RENDERER_H

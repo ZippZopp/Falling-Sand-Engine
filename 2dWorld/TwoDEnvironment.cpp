@@ -31,7 +31,7 @@ int TwoDEnvironment::get(int col, int row) const {
 }
 
 bool TwoDEnvironment::isEmpty(int col,int row){
-    return get(col,row) == 0;
+    return get(col,row) == 0;//Elements::NOTHING_ID;
 }
 
 int TwoDEnvironment::getInBound(int col, int row) const {

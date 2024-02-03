@@ -6,36 +6,48 @@
 #include "Elements.h"
 SDL_Color Elements::getColorForId(int id) {
     switch (id) {
+        case SMOKE_ID:
+            return {5, 5, 5, 255};
         case SAND_ID:
-            return {246, 215, 176, 255};  // Sand
+            return {246, 215, 176, 255};
         case WATER_ID:
-            return {0, 0, 255, 255};      // Water
+            return {0, 0, 255, 255};
+        case STATIC_MATTER_ID:
+            return {139,69,19, 255};
         default:
-            return {0, 0, 0, 255};        // Nothing
+            return {255, 255, 255, 255};
     }
 }
 
 void Elements::changeEnvironment(TwoDEnvironment* environment) {
     changeSand(environment);
     changeWater(environment);
+    changeSmoke(environment);
 }
 
 void Elements::changeSand(TwoDEnvironment* environment) {
-    changeEnvironmentWithExpandingType(environment,SAND_ID,updateSandLike);
+    environment->updateEnvironmentWithFunctionBottomToTop(SAND_ID,updateSandLike);
+}
+
+void Elements::changeSmoke(TwoDEnvironment* environment) {
+    environment->updateEnvironmentWithFunctionTopToBottom(SMOKE_ID,updateGasLike);
 }
 
 void Elements::changeWater(TwoDEnvironment* environment) {
-    changeEnvironmentWithExpandingType(environment,WATER_ID,updateWaterLike);
-}
-
-void Elements::changeEnvironmentWithExpandingType(TwoDEnvironment *environment, int id,
-                                                  std::function<void(TwoDEnvironment *, int, int, int)> updateMethod) {
-    environment->updateEnvironmentWithFunctionBottomToTop(id,updateMethod);
+    environment->updateEnvironmentWithFunctionBottomToTop(WATER_ID,updateWaterLike);
 }
 
 void Elements::updateSandLike(TwoDEnvironment *environment, int col, int row, int id) {
     // todo you could check if in bound at beginning, and then get, without checking ,should be faster.
     const int newRow = row+1;
+    if(!moveWhenPossible(environment,col,row,col,newRow, id)){
+        pickOneOfThemRandomlyIfPossible(environment, col, row, newRow,col-1,col+1,id);
+    }
+}
+
+void Elements::updateGasLike(TwoDEnvironment *environment, int col, int row, int id) {
+    // todo you could check if in bound at beginning, and then get, without checking ,should be faster.
+    const int newRow = row-1;
     if(!moveWhenPossible(environment,col,row,col,newRow, id)){
         pickOneOfThemRandomlyIfPossible(environment, col, row, newRow,col-1,col+1,id);
     }

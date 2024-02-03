@@ -13,10 +13,11 @@
 class Elements {
 public:
     static constexpr int NOTHING_ID = 0;
-    static constexpr int SAND_ID = 2;
-    static constexpr int WATER_ID = 1;
+    static constexpr int SMOKE_ID = 10;
+    static constexpr int WATER_ID = 20;
+    static constexpr int SAND_ID = 30;
 
-    static constexpr int SIZE = 3;
+    static constexpr int STATIC_MATTER_ID = 100;// will never be updated
     static SDL_Color getColorForId(int id);
     void static changeEnvironment(TwoDEnvironment* environment);
 private:
@@ -36,6 +37,10 @@ private:
     void static updateWaterLike(TwoDEnvironment *environment, int col, int row, int id);
 
     static bool canSwitch(TwoDEnvironment *environment, int targetCol, int targetRow, int id);
+
+    static void changeSmoke(TwoDEnvironment *environment);
+
+    static void updateGasLike(TwoDEnvironment *environment, int col, int row, int id);
 };
 
 #endif //SIMPLEWORLD_ELEMENTS_H
