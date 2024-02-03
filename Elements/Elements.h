@@ -13,8 +13,8 @@
 class Elements {
 public:
     static constexpr int NOTHING_ID = 0;
-    static constexpr int SAND_ID = 1;
-    static constexpr int WATER_ID = 2;
+    static constexpr int SAND_ID = 2;
+    static constexpr int WATER_ID = 1;
 
     static constexpr int SIZE = 3;
     static SDL_Color getColorForId(int id);
@@ -27,13 +27,15 @@ private:
 
     void static updateSandLike(TwoDEnvironment* environment, int col, int row, int id);
 
-    bool static moveWhenPossible(TwoDEnvironment *environment, int startCol, int startRow, int targetCol, int targetRow);
+    bool static moveWhenPossible(TwoDEnvironment *environment, int startCol, int startRow, int targetCol, int targetRow, int id);
 
-    static bool pickOneOfThemRandomlyIfPossible(TwoDEnvironment *environment, int col, int row,  int newRow, int col1, int col2);
+    static bool pickOneOfThemRandomlyIfPossible(TwoDEnvironment *environment, int col, int row,  int newRow, int col1, int col2, int id);
 
     static void changeWater(TwoDEnvironment *environment);
 
     void static updateWaterLike(TwoDEnvironment *environment, int col, int row, int id);
+
+    static bool canSwitch(TwoDEnvironment *environment, int targetCol, int targetRow, int id);
 };
 
 #endif //SIMPLEWORLD_ELEMENTS_H

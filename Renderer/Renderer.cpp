@@ -54,30 +54,54 @@ Renderer::setImage(TwoDEnvironment* env) const {
 }
 
 void Renderer::handleEvents(TwoDEnvironment* environment, bool* running) const {
+    static bool leftButtonHeld = false; // Static flag to track the left mouse button state
+    static bool rightButtonHeld = false; // Static flag to track the right mouse button state
     SDL_Event event;
+
     while (SDL_PollEvent(&event)) {  // Poll for pending events
         switch (event.type) {
             case SDL_QUIT:
                 *running = false;
                 break;
             case SDL_MOUSEBUTTONDOWN:
-                // Handle mouse button click
-                if (event.button.button == SDL_BUTTON_LEFT) {  // Check if the left button was clicked
-                    createElementWithId(environment, event, Elements::SAND_ID);
-                }else if(event.button.button == SDL_BUTTON_RIGHT){
-                    createElementWithId(environment, event, Elements::WATER_ID);
+                // Set the flag when the mouse button is pressed
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    leftButtonHeld = true;
+                } else if (event.button.button == SDL_BUTTON_RIGHT) {
+                    rightButtonHeld = true;
                 }
                 break;
-
-
+            case SDL_MOUSEBUTTONUP:
+                // Clear the flag when the mouse button is released
+                if (event.button.button == SDL_BUTTON_LEFT) {
+                    leftButtonHeld = false;
+                } else if (event.button.button == SDL_BUTTON_RIGHT) {
+                    rightButtonHeld = false;
+                }
+                break;
         }
+    }
+
+    // If the left mouse button is being held, create SAND elements
+    if (leftButtonHeld) {
+        int mouseX, mouseY;
+        SDL_GetMouseState(&mouseX, &mouseY); // Get the current mouse position
+        createElementWithId(environment, mouseX, mouseY, Elements::SAND_ID);
+    }
+
+    // If the right mouse button is being held, create WATER elements
+    if (rightButtonHeld) {
+        int mouseX, mouseY;
+        SDL_GetMouseState(&mouseX, &mouseY); // Get the current mouse position
+        createElementWithId(environment, mouseX, mouseY, Elements::WATER_ID);
     }
 }
 
-void Renderer::createElementWithId(TwoDEnvironment *environment, const SDL_Event &event, int id) const {
+
+void Renderer::createElementWithId(TwoDEnvironment *environment, int x, int y, int id) const {
     const int width = WINDOW_WIDTH / environment->cols(); // todo this is calucated many times, mybe saved it
     const int height = WINDOW_HEIGHT / environment->rows();
-    int col = (event.button.x) / width;
-    int row = (event.button.y) / height;
+    int col = x / width;
+    int row = y / height;
     environment->set(col,row,id);
 }

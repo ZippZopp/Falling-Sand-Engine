@@ -51,13 +51,17 @@ void TwoDEnvironment::set(int col, int row, int value) {
     if (checkIfInBoundary(col, row)) {
         delegateVector[colCount * row + col] = value;
     } else {
-        throw std::out_of_range("Column or row is out of bounds.");
+        throw std::out_of_range("Column or row is out of bounds. it cant be set");
     }
 }
 
-void TwoDEnvironment::move(int startCol,int startRow, int targetCol, int targetRow){
-    set(targetCol,targetRow,getInBound(startCol,startRow));
-    set(startCol,startRow,0);
+void TwoDEnvironment::switchElements(int startCol, int startRow, int targetCol, int targetRow){
+    int targetId = get(targetCol,targetRow);
+    if(targetId>=0){
+        set(targetCol,targetRow,getInBound(startCol,startRow));
+        set(startCol,startRow,targetId);
+    }
+
 }
 
 

@@ -44,7 +44,7 @@ public:
     int cols() const;
     int rows() const;
 
-    void move(int startCol, int startRow, int targetCol, int targetRow);
+    void switchElements(int startCol, int startRow, int targetCol, int targetRow);
 
     bool isEmpty(int col, int row);
 
