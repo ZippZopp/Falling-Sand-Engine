@@ -4,7 +4,7 @@ project(simpleworld)
 set(CMAKE_CXX_STANDARD 17)
 
 # Define the executable
-add_executable(simpleworld main.cpp Renderer/Renderer.h Renderer/Renderer.cpp Renderer/Renderer.cpp SimpleWorld/SimpleWorld.cpp SimpleWorld/SimpleWorld.h  Elements/Interfaces/Element.h Elements/Interfaces/Element.h ProjectConstants.h 2dWorld/TwoDEnvironment.h 2dWorld/TwoDEnvironment.cpp)
+add_executable(simpleworld main.cpp Renderer/Renderer.h Renderer/Renderer.cpp Renderer/Renderer.cpp SimpleWorld/SimpleWorld.cpp SimpleWorld/SimpleWorld.h ProjectConstants.h 2dWorld/TwoDEnvironment.h 2dWorld/TwoDEnvironment.cpp Elements/Elements.cpp Elements/Elements.h)
 
 # Find the SDL2 library
 find_package(SDL2 REQUIRED)

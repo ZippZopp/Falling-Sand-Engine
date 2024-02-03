@@ -8,6 +8,7 @@
 #include <vector>
 #include "../2dWorld/TwoDEnvironment.h"
 #include "../ProjectConstants.h"
+#include "../Elements/Elements.h"
 class Renderer {
 private:
     SDL_Window* window;
@@ -22,7 +23,9 @@ public:
 
     void render() const;
     void resetImage() const;
-    void setImage(TwoDEnvironment env, const std::map<int, SDL_Color>& colorMap) const;
+    void setImage(TwoDEnvironment* env) const;
+
+    void handleEvents(TwoDEnvironment *environment, bool* running) const;
 };
 
 #endif // UNTITLED1_RENDERER_H

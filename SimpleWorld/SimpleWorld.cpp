@@ -4,23 +4,14 @@
 
 #include "SimpleWorld.h"
 
-SimpleWorld::SimpleWorld():  renderer(),
-                             environment(ProjectConstants::COLS, ProjectConstants::ROWS),
-                             colorMap({
-                                              {0, {0, 0, 0, 255}}, // 0 -> nothing
-                                              {1, {246,215,176, 255}} // 1 -> Sand
-                                      })
+SimpleWorld::SimpleWorld(): renderer(), environment(ProjectConstants::COLS, ProjectConstants::ROWS) {}
 
 
 void SimpleWorld::run() {
     bool running = true;
     SDL_Event event;
-    while (running) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT) {
-                running = false;
-            }
-        }
+    while(running) {
+        renderer.handleEvents(&environment,&running);
         render();
     }
 }
@@ -28,10 +19,11 @@ void SimpleWorld::run() {
 void SimpleWorld::render() {
     renderer.resetImage();
 
+    Elements::changeEnvironment(&environment);
     // update here environment z.B: environment.set(1,1,1);
     // maybe add buffer, because of flickering
 
-    renderer.setImage(environment,colorMap);
+    renderer.setImage(&environment);
 
     renderer.render();
 }

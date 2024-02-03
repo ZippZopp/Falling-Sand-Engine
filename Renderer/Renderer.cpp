@@ -26,26 +26,50 @@ void Renderer::resetImage() const {
 }
 
 void
-Renderer::setImage(TwoDEnvironment env, const std::map<int, SDL_Color> &colorMap) const {
-    const int width = WINDOW_WIDTH / env.cols();
-    const int height = WINDOW_HEIGHT / env.rows();
+Renderer::setImage(TwoDEnvironment* env) const {
+    const int width = WINDOW_WIDTH / env->cols();
+    const int height = WINDOW_HEIGHT / env->rows();
 
-    for (int col = 0; col < env.cols(); ++col) {
-        for (int row = 0; row < env.rows(); ++row) {
-            auto colorIt = colorMap.find(env.get(col, row));
-            if (colorIt != colorMap.end()) {
-                SDL_Color color = colorIt->second;
-                SDL_SetRenderDrawColor(delegatedRenderer, color.r, color.g, color.b, 255);
+    for (int col = 0; col < env->cols(); ++col) {
+        for (int row = 0; row < env->rows(); ++row) {
 
-                SDL_Rect rect;
-                rect.x = col * width;
-                rect.y = row * height;
-                rect.w = width;
-                rect.h = height;
+            SDL_Color color = Elements::getColorForId(env->get(col,row));
+            SDL_SetRenderDrawColor(delegatedRenderer, color.r, color.g, color.b, 255);
 
-                SDL_RenderFillRect(delegatedRenderer, &rect);
-            }
+            SDL_Rect rect;
+            rect.x = col * width;
+            rect.y = row * height;
+            rect.w = width;
+            rect.h = height;
+
+            SDL_RenderFillRect(delegatedRenderer, &rect);
+
         }
     }
 
+}
+
+void Renderer::handleEvents(TwoDEnvironment* environment, bool* running) const {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {  // Poll for pending events
+        switch (event.type) {
+            case SDL_QUIT:
+                *running = false;
+                break;
+            case SDL_MOUSEBUTTONDOWN:
+                // Handle mouse button click
+                if (event.button.button == SDL_BUTTON_LEFT) {  // Check if the left button was clicked
+                    const int width = WINDOW_WIDTH / environment->cols(); // todo this is calucated many times, mybe saved it
+                    const int height = WINDOW_HEIGHT / environment->rows();
+
+                    int col = (event.button.x) / width;
+                    int row = (event.button.y) / height;
+                    environment->set(col,row,Elements::SAND_ID);
+
+
+                }
+                break;
+                // Handle other events as needed
+        }
+    }
 }

@@ -8,13 +8,12 @@
 
 #include "../Renderer/Renderer.h"
 #include "../ProjectConstants.h"
-
+#include "../Elements/Elements.h"
 class SimpleWorld {
 private:
 
 
     Renderer renderer;
-    std::map<int, SDL_Color> colorMap;
     TwoDEnvironment environment;
 
     void render();
