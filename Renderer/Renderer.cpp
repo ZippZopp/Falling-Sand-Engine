@@ -20,6 +20,10 @@ void Renderer::render() const {
     SDL_RenderPresent(delegatedRenderer);
 }
 
+void Renderer::wait(int milliSeconds) const{
+    SDL_Delay(milliSeconds);
+}
+
 void Renderer::resetImage() const {
     SDL_SetRenderDrawColor(delegatedRenderer, 0, 0, 0, 255); // Set background to black
     SDL_RenderClear(delegatedRenderer);

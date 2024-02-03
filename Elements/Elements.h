@@ -8,6 +8,7 @@
 
 #include <functional>
 #include <SDL_pixels.h>
+#include <random>
 #include "../2dWorld/TwoDEnvironment.h"
 class Elements {
 public:
@@ -25,7 +26,10 @@ private:
                                             std::function<void(TwoDEnvironment*,int,int, int)> updateMethod);
 
     void static updateSandLike(TwoDEnvironment* environment, int col, int row, int id);
-};
 
+    bool static moveWhenPossible(TwoDEnvironment *environment, int startCol, int startRow, int targetCol, int targetRow);
+
+    static void pickOneOfThemRandomlyIfPossible(TwoDEnvironment *environment, int col, int row,  int newRow, int col1, int col2);
+};
 
 #endif //SIMPLEWORLD_ELEMENTS_H

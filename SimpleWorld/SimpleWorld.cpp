@@ -26,5 +26,6 @@ void SimpleWorld::render() {
     renderer.setImage(&environment);
 
     renderer.render();
+    renderer.wait(50); // todo remove wait, and mange the timing differntly
 }
 

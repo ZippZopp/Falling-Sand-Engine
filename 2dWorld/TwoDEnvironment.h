@@ -33,15 +33,32 @@ public:
 
 
     TwoDEnvironment(int cols, int rows);
-    void updateEnvironmentWithFunction(int id,std::function<void(TwoDEnvironment*,int,int, int)> updateMethod);
+    void updateEnvironmentWithFunctionSave(int id,std::function<void(TwoDEnvironment*,int,int, int)> updateMethod);
 
     int size() const;
     int& operator[](int index);
     const int& operator[](int index) const;
     int get(int col, int row) const;
+    int getInBound(int col, int row) const;
     void set(int col, int row, int value);
     int cols() const;
     int rows() const;
+
+    void move(int startCol, int startRow, int targetCol, int targetRow);
+
+    bool isEmpty(int col, int row);
+
+    TwoDEnvironment clone() const;
+
+    void
+    updateEnvironmentWithFunctionBottomToTop(int id,
+                                             std::function<void(TwoDEnvironment *, int, int, int)> updateMethod);
+
+    void
+    updateEnvironmentWithFunctionTopToBottom(int id,
+                                             std::function<void(TwoDEnvironment *, int, int, int)> updateMethod);
+
+
 };
 
 #endif //UNTITLED1_TWODENVIRONMENT_H

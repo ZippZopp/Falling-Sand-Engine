@@ -26,6 +26,8 @@ public:
     void setImage(TwoDEnvironment* env) const;
 
     void handleEvents(TwoDEnvironment *environment, bool* running) const;
+
+    void wait(int milliSeconds) const;
 };
 
 #endif // UNTITLED1_RENDERER_H

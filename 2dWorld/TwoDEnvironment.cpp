@@ -30,6 +30,19 @@ int TwoDEnvironment::get(int col, int row) const {
     return checkIfInBoundary(col, row) ? delegateVector[colCount * row + col] : -1;
 }
 
+bool TwoDEnvironment::isEmpty(int col,int row){
+    return get(col,row) == 0;
+}
+
+int TwoDEnvironment::getInBound(int col, int row) const {
+    int value = get(col,row);
+
+    if(value < 0)
+        throw std::out_of_range("Column or row is out of bounds.");
+
+    return value;
+}
+
 void TwoDEnvironment::set(int col, int row, int value) {
     if(value < 0)
         throw std::invalid_argument("value cant be negative, because all the element ids are positive, and negative stands for outofbounds");
@@ -41,6 +54,12 @@ void TwoDEnvironment::set(int col, int row, int value) {
         throw std::out_of_range("Column or row is out of bounds.");
     }
 }
+
+void TwoDEnvironment::move(int startCol,int startRow, int targetCol, int targetRow){
+    set(targetCol,targetRow,getInBound(startCol,startRow));
+    set(startCol,startRow,0);
+}
+
 
 bool TwoDEnvironment::checkIfInIndexBoundary(int index) const {
     return index < 0 || index >= colCount * rowCount;
@@ -58,11 +77,51 @@ int TwoDEnvironment::rows() const {
     return rowCount;
 }
 
-void TwoDEnvironment::updateEnvironmentWithFunction(int id,
+void TwoDEnvironment::updateEnvironmentWithFunctionSave(int id,
                                                    std::function<void(TwoDEnvironment *, int, int, int)> updateMethod) {
+
+    TwoDEnvironment oldEnvironment = clone();
+
     for (int col = 0; col < cols(); ++col) {
         for (int row = 0; row < rows(); ++row) {
-            updateMethod(this, col, row, id);
+            if(oldEnvironment.get(col,row) == id){
+                updateMethod(this, col, row, id);
+            }
+
         }
     }
+}
+
+void TwoDEnvironment::updateEnvironmentWithFunctionTopToBottom(int id,
+                                                        std::function<void(TwoDEnvironment *, int, int, int)> updateMethod) {
+
+
+
+    for (int row = 0; row < rows(); ++row) {
+        for (int col = 0; col < cols(); ++col) {
+            if(get(col,row) == id){
+                updateMethod(this, col, row, id);
+            }
+
+        }
+    }
+}
+
+void TwoDEnvironment::updateEnvironmentWithFunctionBottomToTop(int id,
+                                                               std::function<void(TwoDEnvironment *, int, int, int)> updateMethod) {
+
+    for (int row = rows()-1; row >= 0 ; --row) {
+        for (int col = 0; col < cols(); ++col) {
+            if(get(col,row) == id){
+                updateMethod(this, col, row, id);
+            }
+
+        }
+    }
+}
+
+
+
+TwoDEnvironment TwoDEnvironment::clone() const {
+    return TwoDEnvironment(*this);
 }
