@@ -63,17 +63,21 @@ void Renderer::handleEvents(TwoDEnvironment* environment, bool* running) const {
             case SDL_MOUSEBUTTONDOWN:
                 // Handle mouse button click
                 if (event.button.button == SDL_BUTTON_LEFT) {  // Check if the left button was clicked
-                    const int width = WINDOW_WIDTH / environment->cols(); // todo this is calucated many times, mybe saved it
-                    const int height = WINDOW_HEIGHT / environment->rows();
-
-                    int col = (event.button.x) / width;
-                    int row = (event.button.y) / height;
-                    environment->set(col,row,Elements::SAND_ID);
-
-
+                    createElementWithId(environment, event, Elements::SAND_ID);
+                }else if(event.button.button == SDL_BUTTON_RIGHT){
+                    createElementWithId(environment, event, Elements::WATER_ID);
                 }
                 break;
-                // Handle other events as needed
+
+
         }
     }
+}
+
+void Renderer::createElementWithId(TwoDEnvironment *environment, const SDL_Event &event, int id) const {
+    const int width = WINDOW_WIDTH / environment->cols(); // todo this is calucated many times, mybe saved it
+    const int height = WINDOW_HEIGHT / environment->rows();
+    int col = (event.button.x) / width;
+    int row = (event.button.y) / height;
+    environment->set(col,row,id);
 }

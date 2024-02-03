@@ -17,10 +17,15 @@ SDL_Color Elements::getColorForId(int id) {
 
 void Elements::changeEnvironment(TwoDEnvironment* environment) {
     changeSand(environment);
+    changeWater(environment);
 }
 
 void Elements::changeSand(TwoDEnvironment* environment) {
     changeEnvironmentWithExpandingType(environment,SAND_ID,updateSandLike);
+}
+
+void Elements::changeWater(TwoDEnvironment* environment) {
+    changeEnvironmentWithExpandingType(environment,WATER_ID,updateWaterLike);
 }
 
 void Elements::changeEnvironmentWithExpandingType(TwoDEnvironment *environment, int id,
@@ -30,15 +35,25 @@ void Elements::changeEnvironmentWithExpandingType(TwoDEnvironment *environment, 
 
 void Elements::updateSandLike(TwoDEnvironment *environment, int col, int row, int id) {
     // todo you could check if in bound at beginning, and then get, without checking ,should be faster.
-    std::cout << col << "/" << row << std::endl;
     const int newRow = row+1;
     if(!moveWhenPossible(environment,col,row,col,newRow)){
         pickOneOfThemRandomlyIfPossible(environment, col, row, newRow,col-1,col+1);
     }
+}
+
+void Elements::updateWaterLike(TwoDEnvironment *environment, int col, int row, int id) {
+    // todo water goes randomly left and right, this seems wrong
+    // todo you could check if in bound at beginning, and then get, without checking ,should be faster.
+    const int newRow = row+1;
+    if(!moveWhenPossible(environment,col,row,col,newRow)){
+        if(!pickOneOfThemRandomlyIfPossible(environment, col, row, newRow,col-1,col+1)){
+            pickOneOfThemRandomlyIfPossible(environment, col, row, row,col-1,col+1);
+    }
+    }
 
 }
 
-void Elements::pickOneOfThemRandomlyIfPossible(TwoDEnvironment *environment, int col, int row,  int newRow,int col1,int col2) {
+bool Elements::pickOneOfThemRandomlyIfPossible(TwoDEnvironment *environment, int col, int row,  int newRow,int col1,int col2) {
     const bool isLeftEmpty = environment->isEmpty(col1, newRow);
     const bool isRightEmpty = environment->isEmpty(col2,newRow);
     if(isLeftEmpty == isRightEmpty){
@@ -49,17 +64,22 @@ void Elements::pickOneOfThemRandomlyIfPossible(TwoDEnvironment *environment, int
             std::bernoulli_distribution bernoulliDistribution(0.5);
             if(bernoulliDistribution(gen)){
                 environment->move(col,row,col1,newRow);
+                return true;
             }else{
                 environment->move(col,row,col2,newRow);
+                return true;
             }
         }
     }else{
         if(isLeftEmpty){
             environment->move(col,row,col1,newRow);
+            return true;
         }else{
             environment->move(col,row,col2,newRow);
+            return true;
         }
     }
+    return false;
 }
 
 bool Elements::moveWhenPossible(TwoDEnvironment *environment,int startCol,int startRow, int targetCol, int targetRow){

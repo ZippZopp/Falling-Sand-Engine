@@ -28,6 +28,8 @@ public:
     void handleEvents(TwoDEnvironment *environment, bool* running) const;
 
     void wait(int milliSeconds) const;
+
+    void createElementWithId(TwoDEnvironment *environment, const SDL_Event &event, int id) const;
 };
 
 #endif // UNTITLED1_RENDERER_H

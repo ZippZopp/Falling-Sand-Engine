@@ -29,7 +29,11 @@ private:
 
     bool static moveWhenPossible(TwoDEnvironment *environment, int startCol, int startRow, int targetCol, int targetRow);
 
-    static void pickOneOfThemRandomlyIfPossible(TwoDEnvironment *environment, int col, int row,  int newRow, int col1, int col2);
+    static bool pickOneOfThemRandomlyIfPossible(TwoDEnvironment *environment, int col, int row,  int newRow, int col1, int col2);
+
+    static void changeWater(TwoDEnvironment *environment);
+
+    void static updateWaterLike(TwoDEnvironment *environment, int col, int row, int id);
 };
 
 #endif //SIMPLEWORLD_ELEMENTS_H
