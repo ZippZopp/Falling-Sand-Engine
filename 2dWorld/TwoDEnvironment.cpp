@@ -83,7 +83,6 @@ void TwoDEnvironment::switchElements(int startCol, int startRow, int targetCol, 
         set(targetCol,targetRow,getInBound(startCol,startRow));
         set(startCol,startRow,targetId);
     }
-
 }
 
 

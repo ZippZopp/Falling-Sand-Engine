@@ -53,65 +53,62 @@ Renderer::setImage(TwoDEnvironment* env) const {
 
 }
 
-void Renderer::handleEvents(TwoDEnvironment* environment, bool* running) const {
-    static bool buttonPressed0 = false;
-    static bool buttonPressed1 = false;
-    static bool buttonPressed2 = false;
-    static bool buttonPressed3 = false;
-    static bool buttonPressed4 = false;
-    SDL_Event event;
+#include <unordered_map>
+#include <SDL.h>
 
-    while (SDL_PollEvent(&event)) {  // Poll for pending events
+void Renderer::handleEvents(TwoDEnvironment* environment, bool* running) const {
+    static std::unordered_map<SDL_Keycode, bool> buttonPressed = {
+            {SDLK_0, false},
+            {SDLK_1, false},
+            {SDLK_2, false},
+            {SDLK_3, false},
+            {SDLK_4, false},
+            {SDLK_5, false},
+            {SDLK_6, false},
+            {SDLK_7, false},
+    };
+
+    // Mapping of keys to element IDs and their corresponding actions
+    static std::unordered_map<SDL_Keycode, std::function<void()>> actions = {
+            {SDLK_0, [&](){ createElementWithId(environment, Elements::NOTHING_ID, 5); }},
+            {SDLK_1, [&](){ createElementWithId(environment, Elements::SAND_ID, 5); }},
+            {SDLK_2, [&](){ createElementWithId(environment, Elements::WATER_ID, 5); }},
+            {SDLK_3, [&](){ createElementWithId(environment, Elements::ACID_ID, 5); }},
+            {SDLK_4, [&](){ createElementWithId(environment, Elements::STATIC_MATTER_ID, 5); }},
+            {SDLK_5, [&](){ createElementWithId(environment, Elements::SMOKE_ID, 5); }},
+            {SDLK_6, [&](){ createElementWithId(environment, Elements::CEMENT_ID, 5); }},
+            {SDLK_7, [&](){ createElementWithId(environment, Elements::LAVA_ID, 5); }},
+    };
+
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
         switch (event.type) {
             case SDL_QUIT:
                 *running = false;
                 break;
             case SDL_KEYDOWN:
-                // Set the flag when the mouse button is pressed
-                if (event.key.keysym.sym == SDLK_0) {
-                    buttonPressed0 = true;
-                } else if (event.key.keysym.sym == SDLK_1) {
-                    buttonPressed1 = true;
-                } else if (event.key.keysym.sym == SDLK_2) {
-                    buttonPressed2 = true;
-                }else if (event.key.keysym.sym == SDLK_3) {
-                    buttonPressed3 = true;
-                } else if (event.key.keysym.sym == SDLK_4) {
-                    buttonPressed4 = true;
+                // Set the flag when a key is pressed
+                if (buttonPressed.find(event.key.keysym.sym) != buttonPressed.end()) {
+                    buttonPressed[event.key.keysym.sym] = true;
                 }
                 break;
             case SDL_KEYUP:
-                if (event.key.keysym.sym == SDLK_0) {
-                    buttonPressed0 = false;
-                } else if (event.key.keysym.sym == SDLK_1) {
-                    buttonPressed1 = false;
-                } else if (event.key.keysym.sym == SDLK_2) {
-                    buttonPressed2 = false;
-                }else if (event.key.keysym.sym == SDLK_3) {
-                    buttonPressed3 = false;
-                } else if (event.key.keysym.sym == SDLK_4) {
-                    buttonPressed4 = false;
+                // Clear the flag when a key is released
+                if (buttonPressed.find(event.key.keysym.sym) != buttonPressed.end()) {
+                    buttonPressed[event.key.keysym.sym] = false;
                 }
                 break;
         }
     }
 
-    if (buttonPressed0) {
-        createElementWithId(environment, Elements::NOTHING_ID,5);
-    }
-    if (buttonPressed1) {
-        createElementWithId(environment, Elements::SAND_ID,5);
-    }
-    if (buttonPressed2) {
-        createElementWithId(environment, Elements::WATER_ID,5);
-    }
-    if (buttonPressed3) {
-        createElementWithId(environment, Elements::STATIC_MATTER_ID,5);
-    }
-    if (buttonPressed4) {
-        createElementWithId(environment, Elements::SMOKE_ID,5);
+    // Execute actions for pressed buttons
+    for (const auto& [key, pressed] : buttonPressed) {
+        if (pressed && actions.find(key) != actions.end()) {
+            actions[key]();  // Execute the associated action
+        }
     }
 }
+
 
 
 void Renderer::createElementWithId(TwoDEnvironment *environment, int id,int radius) const {
