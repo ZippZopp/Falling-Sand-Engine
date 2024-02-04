@@ -46,12 +46,34 @@ int TwoDEnvironment::getInBound(int col, int row) const {
 void TwoDEnvironment::set(int col, int row, int value) {
     if(value < 0)
         throw std::invalid_argument("value cant be negative, because all the element ids are positive, and negative stands for outofbounds");
-
-
     if (checkIfInBoundary(col, row)) {
         delegateVector[colCount * row + col] = value;
     } else {
         throw std::out_of_range("Column or row is out of bounds. it cant be set");
+    }
+}
+
+void TwoDEnvironment::setWithRadius(int centerCol, int centerRow, int value, int radius) {
+    if (value < 0)
+        throw std::invalid_argument("Value can't be negative, because all element IDs are positive, and negative stands for out-of-bounds.");
+
+    for (int col = centerCol - radius; col <= centerCol + radius; ++col) {
+        for (int row = centerRow - radius; row <= centerRow + radius; ++row) {
+            // Calculate the distance from the center to the current point
+            int dx = centerCol - col;
+            int dy = centerRow - row;
+            double distance = std::sqrt(dx * dx + dy * dy);
+
+            // Check if the current point is within the specified radius
+            if (distance <= radius) {
+                // Attempt to set the value, but catch and ignore out-of-bounds errors
+                try {
+                    set(col, row, value);  // Use the existing set method
+                } catch (const std::out_of_range&) {
+                    // Ignore points that are out of bounds
+                }
+            }
+        }
     }
 }
 
@@ -81,45 +103,53 @@ int TwoDEnvironment::rows() const {
     return rowCount;
 }
 
-void TwoDEnvironment::updateEnvironmentWithFunctionSave(int id,
-                                                   std::function<void(TwoDEnvironment *, int, int, int)> updateMethod) {
 
-    TwoDEnvironment oldEnvironment = clone();
+void TwoDEnvironment::updateEnvironmentWithFunctionTopToBottom(int id,
+                                                        std::function<void(TwoDEnvironment *, int, int, int)> updateMethod, bool goLeft) {
 
-    for (int col = 0; col < cols(); ++col) {
+
+    if(goLeft){
         for (int row = 0; row < rows(); ++row) {
-            if(oldEnvironment.get(col,row) == id){
-                updateMethod(this, col, row, id);
-            }
-
+            updateOneRowFromLeft(id, updateMethod, row);
         }
+    }else{
+        for (int row = 0; row < rows(); ++row) {
+            updateOneRowFromRight(id, updateMethod, row);
+        }
+    }
+
+
+}
+
+void TwoDEnvironment::updateOneRowFromLeft(int id, std::function<void(TwoDEnvironment *, int, int, int)> &updateMethod,
+                                      int row){
+    for (int col = 0; col < cols(); ++col) {
+        if(get(col, row) == id){
+            updateMethod(this, col, row, id);
+        }
+
     }
 }
 
-void TwoDEnvironment::updateEnvironmentWithFunctionTopToBottom(int id,
-                                                        std::function<void(TwoDEnvironment *, int, int, int)> updateMethod) {
-
-
-
-    for (int row = 0; row < rows(); ++row) {
-        for (int col = 0; col < cols(); ++col) {
-            if(get(col,row) == id){
-                updateMethod(this, col, row, id);
-            }
-
+void TwoDEnvironment::updateOneRowFromRight(int id, std::function<void(TwoDEnvironment *, int, int, int)> &updateMethod,
+                                      int row){
+    for (int col = cols()-1; col >= 0; --col) {
+        if(get(col, row) == id){
+            updateMethod(this, col, row, id);
         }
+
     }
 }
 
 void TwoDEnvironment::updateEnvironmentWithFunctionBottomToTop(int id,
-                                                               std::function<void(TwoDEnvironment *, int, int, int)> updateMethod) {
-
-    for (int row = rows()-1; row >= 0 ; --row) {
-        for (int col = 0; col < cols(); ++col) {
-            if(get(col,row) == id){
-                updateMethod(this, col, row, id);
-            }
-
+                                                               std::function<void(TwoDEnvironment *, int, int, int)> updateMethod, bool goLeft) {
+    if(goLeft){
+        for (int row = rows()-1; row >= 0 ; --row)  {
+            updateOneRowFromLeft(id, updateMethod, row);
+        }
+    }else{
+        for (int row = rows()-1; row >= 0 ; --row)  {
+            updateOneRowFromRight(id, updateMethod, row);
         }
     }
 }

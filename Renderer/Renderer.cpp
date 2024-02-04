@@ -97,29 +97,29 @@ void Renderer::handleEvents(TwoDEnvironment* environment, bool* running) const {
     }
 
     if (buttonPressed0) {
-        createElementWithId(environment, Elements::NOTHING_ID);
+        createElementWithId(environment, Elements::NOTHING_ID,5);
     }
     if (buttonPressed1) {
-        createElementWithId(environment, Elements::SAND_ID);
+        createElementWithId(environment, Elements::SAND_ID,5);
     }
     if (buttonPressed2) {
-        createElementWithId(environment, Elements::WATER_ID);
+        createElementWithId(environment, Elements::WATER_ID,5);
     }
     if (buttonPressed3) {
-        createElementWithId(environment, Elements::STATIC_MATTER_ID);
+        createElementWithId(environment, Elements::STATIC_MATTER_ID,5);
     }
     if (buttonPressed4) {
-        createElementWithId(environment, Elements::SMOKE_ID);
+        createElementWithId(environment, Elements::SMOKE_ID,5);
     }
 }
 
 
-void Renderer::createElementWithId(TwoDEnvironment *environment, int id) const {
+void Renderer::createElementWithId(TwoDEnvironment *environment, int id,int radius) const {
     int mouseX, mouseY;
     SDL_GetMouseState(&mouseX, &mouseY); // Get the current mouse position
     const int width = WINDOW_WIDTH / environment->cols(); // todo this is calucated many times, mybe saved it
     const int height = WINDOW_HEIGHT / environment->rows();
     int col = mouseX / width;
     int row = mouseY / height;
-    environment->set(col,row,id);
+    environment->setWithRadius(col,row,id,radius);
 }

@@ -20,21 +20,24 @@ SDL_Color Elements::getColorForId(int id) {
 }
 
 void Elements::changeEnvironment(TwoDEnvironment* environment) {
+    currentStep = (currentStep+1)%std::numeric_limits<int>::max();
     changeSand(environment);
     changeWater(environment);
     changeSmoke(environment);
 }
 
 void Elements::changeSand(TwoDEnvironment* environment) {
-    environment->updateEnvironmentWithFunctionBottomToTop(SAND_ID,updateSandLike);
+    environment->updateEnvironmentWithFunctionBottomToTop(SAND_ID, updateSandLike, toggleLeftRightWithId(SAND_ID));
 }
 
+int Elements::toggleLeftRightWithId(int id) const { return (currentStep + id) % 2; }
+
 void Elements::changeSmoke(TwoDEnvironment* environment) {
-    environment->updateEnvironmentWithFunctionTopToBottom(SMOKE_ID,updateGasLike);
+    environment->updateEnvironmentWithFunctionTopToBottom(SMOKE_ID,updateGasLike, toggleLeftRightWithId(SMOKE_ID));
 }
 
 void Elements::changeWater(TwoDEnvironment* environment) {
-    environment->updateEnvironmentWithFunctionBottomToTop(WATER_ID,updateWaterLike);
+    environment->updateEnvironmentWithFunctionBottomToTop(WATER_ID,updateWaterLike, toggleLeftRightWithId(WATER_ID));
 }
 
 void Elements::updateSandLike(TwoDEnvironment *environment, int col, int row, int id) {
@@ -49,12 +52,13 @@ void Elements::updateGasLike(TwoDEnvironment *environment, int col, int row, int
     // todo you could check if in bound at beginning, and then get, without checking ,should be faster.
     const int newRow = row-1;
     if(!moveWhenPossible(environment,col,row,col,newRow, id)){
-        pickOneOfThemRandomlyIfPossible(environment, col, row, newRow,col-1,col+1,id);
+        if(!pickOneOfThemRandomlyIfPossible(environment, col, row, newRow,col-1,col+1,id)){
+            pickOneOfThemRandomlyIfPossible(environment, col, row, row,col-1,col+1, id);
+        }
     }
 }
 
 void Elements::updateWaterLike(TwoDEnvironment *environment, int col, int row, int id) {
-    // todo water goes randomly left and right, this seems wrong
     // todo you could check if in bound at beginning, and then get, without checking ,should be faster.
     const int newRow = row+1;
     if(!moveWhenPossible(environment,col,row,col,newRow, id)){
@@ -70,11 +74,7 @@ bool Elements::pickOneOfThemRandomlyIfPossible(TwoDEnvironment *environment, int
     const bool isRightEmpty = canSwitch(environment, col2,newRow, id);
     if(isLeftEmpty == isRightEmpty){
         if(isLeftEmpty){
-            // TODO dont like how the random number generator is handled, it will initilaised every time and it looks ass
-            std::random_device randomGenerator;  // Obtain a random number from hardware
-            std::mt19937 gen(randomGenerator()); // Seed the generator
-            std::bernoulli_distribution bernoulliDistribution(0.5);
-            if(bernoulliDistribution(gen)){
+            if(rand() & 1){// randomly 0 and 1
                 environment->switchElements(col, row, col1, newRow);
                 return true;
             }else{
@@ -108,6 +108,10 @@ bool Elements::canSwitch(TwoDEnvironment *environment, int targetCol, int target
     int returnValue = environment->get(targetCol, targetRow);
     return (returnValue >= 0) && (returnValue < id);
 
+}
+
+Elements::Elements() {
+    currentStep = 0;
 }
 
 

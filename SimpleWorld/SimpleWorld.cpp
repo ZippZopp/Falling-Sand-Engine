@@ -4,7 +4,7 @@
 
 #include "SimpleWorld.h"
 
-SimpleWorld::SimpleWorld(): renderer(), environment(ProjectConstants::COLS, ProjectConstants::ROWS) {}
+SimpleWorld::SimpleWorld(): renderer(), environment(ProjectConstants::COLS, ProjectConstants::ROWS), elements() {}
 
 
 void SimpleWorld::run() {
@@ -19,13 +19,13 @@ void SimpleWorld::run() {
 void SimpleWorld::render() {
     renderer.resetImage();
 
-    Elements::changeEnvironment(&environment);
+    elements.changeEnvironment(&environment);
     // update here environment z.B: environment.set(1,1,1);
     // maybe add buffer, because of flickering
 
     renderer.setImage(&environment);
 
     renderer.render();
-    renderer.wait(10); // todo remove wait, and mange the timing differntly
+    //renderer.wait(10); // todo remove wait, and mange the timing differntly
 }
 

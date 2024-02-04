@@ -10,8 +10,8 @@
 namespace ProjectConstants {
     static constexpr int WINDOW_WIDTH = 800;
     static constexpr int WINDOW_HEIGHT = 800;
-    static constexpr int ROWS = 50;
-    static constexpr int COLS = 50;
+    static constexpr int ROWS = 200;
+    static constexpr int COLS = 200;
 }
 
 #endif // PROJECTCONSTANTS_H

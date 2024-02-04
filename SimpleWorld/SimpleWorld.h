@@ -15,6 +15,7 @@ private:
 
     Renderer renderer;
     TwoDEnvironment environment;
+    Elements elements;
 
     void render();
 
