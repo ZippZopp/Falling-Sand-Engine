@@ -70,14 +70,14 @@ void Renderer::handleEvents(TwoDEnvironment* environment, bool* running) const {
 
     // Mapping of keys to element IDs and their corresponding actions
     static std::unordered_map<SDL_Keycode, std::function<void()>> actions = {
-            {SDLK_0, [&](){ createElementWithId(environment, Elements::NOTHING_ID, 5); }},
-            {SDLK_1, [&](){ createElementWithId(environment, Elements::SAND_ID, 5); }},
-            {SDLK_2, [&](){ createElementWithId(environment, Elements::WATER_ID, 5); }},
-            {SDLK_3, [&](){ createElementWithId(environment, Elements::ACID_ID, 5); }},
-            {SDLK_4, [&](){ createElementWithId(environment, Elements::STATIC_MATTER_ID, 5); }},
-            {SDLK_5, [&](){ createElementWithId(environment, Elements::SMOKE_ID, 5); }},
-            {SDLK_6, [&](){ createElementWithId(environment, Elements::CEMENT_ID, 5); }},
-            {SDLK_7, [&](){ createElementWithId(environment, Elements::LAVA_ID, 5); }},
+            {SDLK_0, [&](){ createElementWithId(environment, Elements::NOTHING_ID, 3); }},
+            {SDLK_1, [&](){ createElementWithId(environment, Elements::SAND_ID, 3); }},
+            {SDLK_2, [&](){ createElementWithId(environment, Elements::WATER_ID, 3); }},
+            {SDLK_3, [&](){ createElementWithId(environment, Elements::ACID_ID, 3); }},
+            {SDLK_4, [&](){ createElementWithId(environment, Elements::STATIC_MATTER_ID, 3); }},
+            {SDLK_5, [&](){ createElementWithId(environment, Elements::SMOKE_ID, 3); }},
+            {SDLK_6, [&](){ createElementWithId(environment, Elements::CEMENT_ID, 3); }},
+            {SDLK_7, [&](){ createElementWithId(environment, Elements::LAVA_ID, 3); }},
     };
 
     SDL_Event event;
